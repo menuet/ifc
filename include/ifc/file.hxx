@@ -7,6 +7,7 @@
 #include <array>
 #include <string>
 #include <cstring>
+#include <stdexcept>
 
 #include <ifc/assertions.hxx>
 #include "ifc/index-utils.hxx"
@@ -201,25 +202,23 @@ namespace ifc {
     };
 
     // Exception tag used to signal target architecture mismatch.
-    struct IfcArchMismatch {
-        Pathname name;
-        Pathname path;
+    struct IfcArchMismatch : public std::logic_error {
+        IfcArchMismatch(Pathname name, Pathname path) : std::logic_error("IfcArchMismatch") {}
     };
 
     // Exception tag used to signal an read failure from an IFC file (either invalid or corrupted.)
-    struct IfcReadFailure {
-        Pathname path;
+    struct IfcReadFailure : public std::logic_error {
+        IfcReadFailure(Pathname path) : std::logic_error("IfcReadFailure") {}
     };
 
     // -- failed to match ifc integrity check
-    struct IntegrityCheckFailed {
-        SHA256Hash expected;
-        SHA256Hash actual;
+    struct IntegrityCheckFailed : public std::logic_error {
+        IntegrityCheckFailed(SHA256Hash expected, SHA256Hash actual) : std::logic_error("IntegrityCheckFailed") {}
     };
 
     /// -- unsupported format
-    struct UnsupportedFormatVersion {
-        FormatVersion version;
+    struct UnsupportedFormatVersion : public std::logic_error {
+        UnsupportedFormatVersion(FormatVersion version) : std::logic_error("UnsupportedFormatVersion") {}
     };
 
     enum class IfcOptions {
@@ -377,7 +376,9 @@ namespace ifc {
             UTF8ViewType partition_name;
         };
 
-        struct IllFormedPartitionName {};
+        struct IllFormedPartitionName : public std::logic_error {
+            IllFormedPartitionName() : std::logic_error{"Ill-formed partition name"} {}
+        };
 
         static OwningModuleAndPartition separate_module_name(UTF8ViewType name)
         {

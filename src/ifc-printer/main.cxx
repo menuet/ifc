@@ -18,14 +18,6 @@ void translate_exception()
     {
         std::cout << "caught: " << e.what() << '\n';
     }
-    catch (ifc::IfcArchMismatch&)
-    {
-        std::cout << "ifc architecture mismatch\n";
-    }
-    catch (const char* message)
-    {
-        std::cout << "caught: " << message;
-    }
     catch (...)
     {
         std::cout << "unknown exception caught\n";

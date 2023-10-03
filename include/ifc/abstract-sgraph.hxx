@@ -18,6 +18,7 @@
 #include <concepts>
 #include <string_view>
 #include <type_traits>
+#include <stdexcept>
 
 #include <ifc/underlying.hxx>
 #include <ifc/basic-types.hxx>
@@ -3517,8 +3518,10 @@ namespace ifc {
     };
 
     // -- exception type in case of an invalid partition name
-    struct InvalidPartitionName {
-        std::string_view name;
+    struct InvalidPartitionName : public std::logic_error {
+        InvalidPartitionName(std::string_view invalid_name)
+          : logic_error("ifc invalid partition name: '" + std::string(invalid_name) + "'")
+        {}
     };
 
     // Retrieve a partition summary based on the partition's name.

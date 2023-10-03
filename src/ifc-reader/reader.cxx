@@ -24,7 +24,7 @@ namespace ifc {
     Reader::Reader(const ifc::InputIfc& ifc) : ifc(ifc)
     {
         if (not ifc.header())
-            throw "file not found";
+            throw std::logic_error("file not found");
         read_table_of_contents();
     }
 
